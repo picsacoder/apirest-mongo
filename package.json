@@ -1,0 +1,26 @@
+{
+  "name": "apirest-mongo",
+  "version": "1.0.0",
+  "description": "Api Rest MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/picsacoder/apirest-mongo.git"
+  },
+  "keywords": [
+    "picsacoder"
+  ],
+  "author": "picsacoder",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/picsacoder/apirest-mongo/issues"
+  },
+  "homepage": "https://github.com/picsacoder/apirest-mongo#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.2"
+  }
+}
