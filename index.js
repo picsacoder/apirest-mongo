@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const app = require('./app');
-const port = 3000;
+const port = 4000;
 
 mongoose.connect('mongodb://localhost:27017/api_rest')
     .then( () => {
