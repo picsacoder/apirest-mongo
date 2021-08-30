@@ -12,65 +12,143 @@ function pruebas(req, res) {
 };
 
 async function create_user(req,res) {
-    let user = new usr();
     let params = req.body; //parametros chidos
 
-    if (params.name && params.email && params.pass) {
-        user.name = params.name;
-        user.email = params.email;  
-        user.pass = params.pass; 
+    let ifEmailExist = await usr.exists({ email:params.email});
 
-        let pass_crypt = await bcrypt.hash(params.pass, 10);
-
-        user.pass = pass_crypt;
-
-        user.save((err,user_saved) => {
-            if (err) {
-                res.status(500).send({
-                    message: "Error"
-                })
-                
-            }
-            else {
-                if (user_saved) { 
-                    res.status(200).send({
-                        user: user_saved
-                    })
-                }
-
-                else {
-                    res.status(200).send({
-                        message: "User not saved"
-                    })
-                }
-            }
-        });
+    if (ifEmailExist) {
+        res.status(200).send({
+            message: "Email in use, please choose other email or log in"
+        })
     }
 
-    else { 
-        res.status(200).send({
-            message: "Params not found"
-        })        
+
+    if(!ifEmailExist) {
+
+        let user = new usr();
+        
+
+        if (params.name && params.email && params.pass) {
+            user.name = params.name;
+            user.email = params.email;  
+            user.pass = params.pass; 
+        
+            let pass_crypt = await bcrypt.hash(params.pass, 10);
+        
+            user.pass = pass_crypt;
+        
+            user.save((err,user_saved) => {
+                if (err) {
+                    res.status(500).send({
+                        message: "Error"
+                    })
+                        
+                }
+                else {
+                    if (user_saved) { 
+                        res.status(200).send({
+                            user: user_saved
+                        })
+                    }
+        
+                    else {
+                        res.status(200).send({
+                            message: "User not saved"
+                        })
+                    }
+                }
+            });
+        }
+        
+        else { 
+            res.status(200).send({
+                message: "Params not found"
+            })
+        }
     }
 }
 
-function login(req,res) {
-    let email = req.body.email;
-    
-    if(usr.find({email:email})) {
-        res.status(200).send({
-            message: "Login"
-        })
+async function login(req,res) {
+    let params = req.body;
+
+    if (params.email && params.pass) { 
+        let finding = await usr.find({email:params.email})
+        if (finding.length <= 0) {
+            res.status(200).send({
+                message: 'User not found'
+            })
+        }
+
+        let passHash = finding[0].pass;
+
+        let compare = bcrypt.compareSync(params.pass, passHash);
+
+        if (compare) { 
+            res.status(200).send({
+                message: 'Login pass'
+            
+            })
+        }
+
+        else {
+            res.status(200).send({
+                message: 'Incorrect password'
+            
+            })
+        }
+
+
     }
     else { 
         res.status(500).send({
-            message: "Error: No email for search"
-        })       
+            message: 'Params not found'
+        })
     }
+}
+
+async function delete_acc(req,res) {
+    let params = req.body;
+
+
+    if (params.email && params.pass) { 
+        let finding = await usr.find({email:params.email})
+        if (finding.length <= 0) {
+            res.status(200).send({
+                message: 'User not found'
+            })
+        }
+
+        let passHash = finding[0].pass;
+
+        let compare = bcrypt.compareSync(params.pass, passHash);
+
+        if (compare) { 
+            await usr.deleteOne({ email:params.email });
+            res.status(200).send({
+                message: 'User deleted'
+            })
+        }
+
+        else {
+            res.status(200).send({
+                message: 'Incorrect password'
+            
+            })
+        }
+
+
+    }
+    else { 
+        res.status(500).send({
+            message: 'Params not found'
+        })
+    }
+
 }
 
 module.exports = {
     pruebas,
     create_user,
-    login
+    login,
+    delete_acc
 };
