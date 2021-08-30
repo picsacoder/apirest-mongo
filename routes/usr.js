@@ -3,7 +3,7 @@ const controller = require('../controllers/usr');
 
 var api = express.Router();
 
-api.get('/test', controller.pruebas);
 api.post('/register', controller.create_user)
+api.post('/login', controller.login)
 
 module.exports = api;

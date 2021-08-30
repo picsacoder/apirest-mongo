@@ -55,11 +55,22 @@ async function create_user(req,res) {
 }
 
 function login(req,res) {
-    let params = req.body;
+    let email = req.body.email;
     
+    if(usr.find({email:email})) {
+        res.status(200).send({
+            message: "Login"
+        })
+    }
+    else { 
+        res.status(500).send({
+            message: "Error: No email for search"
+        })       
+    }
 }
 
 module.exports = {
     pruebas,
-    create_user
+    create_user,
+    login
 };
