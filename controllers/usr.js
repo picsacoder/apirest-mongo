@@ -46,7 +46,7 @@ async function create_user(req,res) {
                 }
                 else {
                     if (user_saved) { 
-                        res.status(200).send({
+                        res.status(201).send({
                             user: user_saved
                         })
                     }
@@ -61,7 +61,7 @@ async function create_user(req,res) {
         }
         
         else { 
-            res.status(200).send({
+            res.status(204).send({
                 message: "Params not found"
             })
         }
@@ -74,7 +74,7 @@ async function login(req,res) {
     if (params.email && params.pass) { 
         let finding = await usr.find({email:params.email})
         if (finding.length <= 0) {
-            res.status(200).send({
+            res.status(404).send({
                 message: 'User not found'
             })
         }
