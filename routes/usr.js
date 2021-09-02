@@ -5,6 +5,6 @@ var api = express.Router();
 
 api.post('/register', controller.create_user)
 api.post('/login', controller.login)
-api.post('/delete', controller.delete_acc)
+api.delete('/delete', controller.delete_acc)
 
 module.exports = api;
